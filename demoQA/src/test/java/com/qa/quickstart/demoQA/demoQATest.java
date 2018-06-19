@@ -11,6 +11,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.PageFactory;
 
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
@@ -34,21 +35,24 @@ public class demoQATest {
 		driver.navigate().to(url);
 	}
 	
+	@Ignore
 	@Test
 	public void testDroppable() {
 		ExtentTest test = extent.startTest("Testing Droppable");
+		demoQAHome homePage = PageFactory.initElements(driver, demoQAHome.class);
+		DroppablePage droppablePage = PageFactory.initElements(driver, DroppablePage.class);
 		
-		driver.findElement(By.linkText("Droppable")).click();
+		homePage.droppableButton.click();
 		test.log(LogStatus.INFO, "Droppable page loaded");
-		WebElement From=driver.findElement(By.id("draggableview"));
+		WebElement From=droppablePage.elementToPickUp;
 		test.log(LogStatus.INFO, "Element to be dragged identified");
-		WebElement To=driver.findElement(By.id("droppableview"));
+		WebElement To=droppablePage.elementToDropOn;
 		test.log(LogStatus.INFO, "Element to be dragged to identified");
 		Actions act = new Actions(driver);
 		act.dragAndDrop(From, To).build().perform();
 		test.log(LogStatus.INFO, "Element dragged");
 		try {
-			assertTrue(driver.findElement(By.id("droppableview")).getText().matches("Dropped!"));
+			assertTrue(To.getText().matches("Dropped!"));
 			test.log(LogStatus.PASS, "Drag and drop successfully registered");
 		} catch (AssertionError e) {
 			test.log(LogStatus.FAIL, "Drag and drop was not successful");
@@ -62,24 +66,23 @@ public class demoQATest {
 	@Test
 	public void testSelectable() {
 		ExtentTest test = extent.startTest("Testing multiple Selects");
-		
-		driver.findElement(By.linkText("Selectable")).click();
+		demoQAHome homePage = PageFactory.initElements(driver, demoQAHome.class);
+		SelectablePage selectablePage = PageFactory.initElements(driver, SelectablePage.class);
+
+		homePage.selectableButton.click();
 		test.log(LogStatus.INFO, "Selectable page loaded");
-		WebElement From=driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[1]"));
+		WebElement From=selectablePage.row1;
 		test.log(LogStatus.INFO, "First Element to be selected identified");
-		WebElement To=driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[6]"));
+		WebElement To=selectablePage.row6;
 		test.log(LogStatus.INFO, "Element to be selected to identified");
 		Actions act = new Actions(driver);
 		act.dragAndDrop(From, To).build().perform();
 		test.log(LogStatus.INFO, "Mouse Dragged");
 		try {
-			assertTrue(driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[1]")).getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
-				   driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[2]")).getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
-				   driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[3]")).getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
-				   driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[4]")).getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
-				   driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[5]")).getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
-				   driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[6]")).getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
-				   !driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[7]")).getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected"));
+			assertTrue(From.getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
+					   To.getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
+					   selectablePage.row3.getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
+					   !selectablePage.row7.getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected"));
 			test.log(LogStatus.PASS, "Multiple elements successfully selected");
 		} catch (AssertionError e) {
 			test.log(LogStatus.FAIL, "Multiple selects were not possible");
@@ -89,9 +92,12 @@ public class demoQATest {
 			extent.endTest(test);
 		}
 		
-		
 	}
 	
+	@Test
+	public void testAccordion() {
+		
+	}
 	
 	@After
 	public void tearDown() {
