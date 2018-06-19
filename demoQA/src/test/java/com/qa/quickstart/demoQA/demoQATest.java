@@ -35,7 +35,6 @@ public class demoQATest {
 		driver.navigate().to(url);
 	}
 	
-	@Ignore
 	@Test
 	public void testDroppable() {
 		ExtentTest test = extent.startTest("Testing Droppable");
@@ -44,15 +43,10 @@ public class demoQATest {
 		
 		homePage.droppableButton.click();
 		test.log(LogStatus.INFO, "Droppable page loaded");
-		WebElement From=droppablePage.elementToPickUp;
-		test.log(LogStatus.INFO, "Element to be dragged identified");
-		WebElement To=droppablePage.elementToDropOn;
-		test.log(LogStatus.INFO, "Element to be dragged to identified");
-		Actions act = new Actions(driver);
-		act.dragAndDrop(From, To).build().perform();
+		droppablePage.drag(driver);
 		test.log(LogStatus.INFO, "Element dragged");
 		try {
-			assertTrue(To.getText().matches("Dropped!"));
+			assertTrue(droppablePage.elementToDropOn.getText().matches("Dropped!"));
 			test.log(LogStatus.PASS, "Drag and drop successfully registered");
 		} catch (AssertionError e) {
 			test.log(LogStatus.FAIL, "Drag and drop was not successful");
@@ -62,7 +56,7 @@ public class demoQATest {
 			extent.endTest(test);
 		}
 	}
-	
+	@Ignore
 	@Test
 	public void testSelectable() {
 		ExtentTest test = extent.startTest("Testing multiple Selects");
@@ -71,19 +65,14 @@ public class demoQATest {
 
 		homePage.selectableButton.click();
 		test.log(LogStatus.INFO, "Selectable page loaded");
-		WebElement From=selectablePage.row1;
-		test.log(LogStatus.INFO, "First Element to be selected identified");
-		WebElement To=selectablePage.row6;
-		test.log(LogStatus.INFO, "Element to be selected to identified");
-		Actions act = new Actions(driver);
-		act.dragAndDrop(From, To).build().perform();
+		selectablePage.selectMultiple(driver);
 		test.log(LogStatus.INFO, "Mouse Dragged");
 		try {
-			assertTrue(From.getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
-					   To.getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
+			assertTrue(selectablePage.row1.getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
+					   selectablePage.row6.getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
 					   selectablePage.row3.getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
 					   !selectablePage.row7.getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected"));
-			test.log(LogStatus.PASS, "Multiple elements successfully selected");
+						test.log(LogStatus.PASS, "Multiple elements successfully selected");
 		} catch (AssertionError e) {
 			test.log(LogStatus.FAIL, "Multiple selects were not possible");
 			fail();
@@ -93,10 +82,16 @@ public class demoQATest {
 		}
 		
 	}
-	
+	@Ignore
 	@Test
 	public void testAccordion() {
+		demoQAHome homePage = PageFactory.initElements(driver, demoQAHome.class);
+		Accordion accordionPage = PageFactory.initElements(driver, Accordion.class);
 		
+		homePage.accordionButton.click();
+		accordionPage.section2.click();
+		assertTrue(accordionPage.section1.getAttribute("aria-expanded").matches("false") &&
+				accordionPage.section2.getAttribute("aria-expanded").matches("true"));
 	}
 	
 	@After
