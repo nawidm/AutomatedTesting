@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -56,6 +57,39 @@ public class demoQATest {
 			test.log(LogStatus.INFO, "Current URL: " + driver.getCurrentUrl());
 			extent.endTest(test);
 		}
+	}
+	
+	@Test
+	public void testSelectable() {
+		ExtentTest test = extent.startTest("Testing multiple Selects");
+		
+		driver.findElement(By.linkText("Selectable")).click();
+		test.log(LogStatus.INFO, "Selectable page loaded");
+		WebElement From=driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[1]"));
+		test.log(LogStatus.INFO, "First Element to be selected identified");
+		WebElement To=driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[6]"));
+		test.log(LogStatus.INFO, "Element to be selected to identified");
+		Actions act = new Actions(driver);
+		act.dragAndDrop(From, To).build().perform();
+		test.log(LogStatus.INFO, "Mouse Dragged");
+		try {
+			assertTrue(driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[1]")).getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
+				   driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[2]")).getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
+				   driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[3]")).getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
+				   driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[4]")).getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
+				   driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[5]")).getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
+				   driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[6]")).getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected") &&
+				   !driver.findElement(By.xpath("//*[@id=\"selectable\"]/li[7]")).getAttribute("class").matches("ui-widget-content ui-corner-left ui-selectee ui-selected"));
+			test.log(LogStatus.PASS, "Multiple elements successfully selected");
+		} catch (AssertionError e) {
+			test.log(LogStatus.FAIL, "Multiple selects were not possible");
+			fail();
+		} finally {
+			test.log(LogStatus.INFO, "Current URL: " + driver.getCurrentUrl());
+			extent.endTest(test);
+		}
+		
+		
 	}
 	
 	
