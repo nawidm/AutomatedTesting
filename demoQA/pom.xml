@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.qa.quickstart</groupId>
-  <artifactId>ShoppingWebsite</artifactId>
+  <artifactId>demoQA</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>ShoppingWebsite</name>
+  <name>demoQA</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -28,13 +28,6 @@
 		    <groupId>org.seleniumhq.selenium</groupId>
 		    <artifactId>selenium-java</artifactId>
 		    <version>3.12.0</version>
-		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/com.relevantcodes/extentreports -->
-		<dependency>
-		    <groupId>com.relevantcodes</groupId>
-		    <artifactId>extentreports</artifactId>
-		    <version>2.41.2</version>
 		</dependency>
 
   </dependencies>
