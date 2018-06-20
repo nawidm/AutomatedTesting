@@ -34,14 +34,14 @@ public class demoQATest {
 		String url = "http://demoqa.com/";
 		driver.navigate().to(url);
 	}
-	
+	@Ignore
 	@Test
 	public void testDroppable() {
 		ExtentTest test = extent.startTest("Testing Droppable");
 		demoQAHome homePage = PageFactory.initElements(driver, demoQAHome.class);
 		DroppablePage droppablePage = PageFactory.initElements(driver, DroppablePage.class);
 		
-		homePage.droppableButton.click();
+		homePage.clickDroppable();
 		test.log(LogStatus.INFO, "Droppable page loaded");
 		droppablePage.drag(driver);
 		test.log(LogStatus.INFO, "Element dragged");
@@ -51,6 +51,7 @@ public class demoQATest {
 		} catch (AssertionError e) {
 			test.log(LogStatus.FAIL, "Drag and drop was not successful");
 			fail();
+			driver.quit();
 		} finally {
 			test.log(LogStatus.INFO, "Current URL: " + driver.getCurrentUrl());
 			extent.endTest(test);
@@ -63,7 +64,7 @@ public class demoQATest {
 		demoQAHome homePage = PageFactory.initElements(driver, demoQAHome.class);
 		SelectablePage selectablePage = PageFactory.initElements(driver, SelectablePage.class);
 
-		homePage.selectableButton.click();
+		homePage.clickSelectable();
 		test.log(LogStatus.INFO, "Selectable page loaded");
 		selectablePage.selectMultiple(driver);
 		test.log(LogStatus.INFO, "Mouse Dragged");
@@ -76,6 +77,7 @@ public class demoQATest {
 		} catch (AssertionError e) {
 			test.log(LogStatus.FAIL, "Multiple selects were not possible");
 			fail();
+			driver.quit();
 		} finally {
 			test.log(LogStatus.INFO, "Current URL: " + driver.getCurrentUrl());
 			extent.endTest(test);
@@ -85,18 +87,83 @@ public class demoQATest {
 	@Ignore
 	@Test
 	public void testAccordion() {
+		ExtentTest test = extent.startTest("Testing Accordion");
 		demoQAHome homePage = PageFactory.initElements(driver, demoQAHome.class);
 		Accordion accordionPage = PageFactory.initElements(driver, Accordion.class);
 		
-		homePage.accordionButton.click();
-		accordionPage.section2.click();
-		assertTrue(accordionPage.section1.getAttribute("aria-expanded").matches("false") &&
+		homePage.clickAccordion();
+		test.log(LogStatus.INFO, "AccordionPage loaded");
+		accordionPage.clickSection2();
+		test.log(LogStatus.INFO, "section 2 clicked");
+		try {
+			assertTrue(accordionPage.section1.getAttribute("aria-expanded").matches("false") &&
 				accordionPage.section2.getAttribute("aria-expanded").matches("true"));
+			test.log(LogStatus.PASS, "section 2 successfully expands while section 1 collapes");
+		} catch (AssertionError e) {
+			test.log(LogStatus.FAIL, "expansion/collapse of sections was not successful");
+			fail();
+			driver.quit();
+		} finally {
+			test.log(LogStatus.INFO, "Current URL: "+driver.getCurrentUrl());
+			extent.endTest(test);
+		}
+		
+	}
+	@Ignore
+	@Test
+	public void testAutoComplete() {
+		ExtentTest test = extent.startTest("Testing AutoComplete");
+		demoQAHome homePage = PageFactory.initElements(driver, demoQAHome.class);
+		AutoComplete autoCompletePage = PageFactory.initElements(driver, AutoComplete.class);
+	
+		homePage.clickAutoComplete();
+		test.log(LogStatus.INFO, "Autocomplete page loaded");
+		autoCompletePage.enterValue("s");
+		test.log(LogStatus.INFO, "value entered into searchbox");
+		
+		try {
+			assertTrue(autoCompletePage.firstResult.getText().contains(autoCompletePage.searchBox.getText()));
+			test.log(LogStatus.PASS, "Result contains the searched value");
+		} catch(AssertionError e) {
+			test.log(LogStatus.FAIL, "Result does not contain the searched value");
+			fail();
+			driver.quit();
+		} finally {
+			test.log(LogStatus.INFO, "Current URL: "+driver.getCurrentUrl());
+		}	
+		
+		autoCompletePage.selectFirstValue(driver);
+		test.log(LogStatus.INFO, "First result value is clicked on");
+
+		try {
+			assertTrue(autoCompletePage.searchBox.getText().matches(autoCompletePage.firstResult.getText()));
+			test.log(LogStatus.PASS, "Searchbox successfully equals the new value");
+		} catch(AssertionError e) {
+			test.log(LogStatus.FAIL, "Searchbox failed to fill");
+			fail();
+			driver.quit();
+		} finally {
+			test.log(LogStatus.INFO, "Current URL: "+driver.getCurrentUrl());
+			extent.endTest(test);
+		}
+	}
+
+	@Test 
+	public void testDatePicker() {
+		demoQAHome homePage = PageFactory.initElements(driver, demoQAHome.class);
+		DatePicker datePickerPage = PageFactory.initElements(driver, DatePicker.class);
+		
+		homePage.clickDatePicker();
+		datePickerPage.clickBox();
+		datePickerPage.clickNextMonth();
+		datePickerPage.selectDate("18", driver);
+
+		assertTrue(datePickerPage.getDateTxt().matches(datePickerPage.getMonth()+" "+datePickerPage.getDay()+", "+datePickerPage.getYear()));
 	}
 	
 	@After
 	public void tearDown() {
-		driver.close();
+		driver.quit();
 		extent.flush();
 	}
 }

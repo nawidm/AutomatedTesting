@@ -6,29 +6,62 @@ import org.openqa.selenium.support.FindBy;
 public class demoQAHome {
 
 	@FindBy(linkText = "Droppable")
-	WebElement droppableButton;
+	private WebElement droppableButton;
 	
 	@FindBy(linkText = "Selectable")
-	WebElement selectableButton;
+	private WebElement selectableButton;
 	
 	@FindBy(linkText = "Accordion")
-	WebElement accordionButton;
+	private WebElement accordionButton;
 	
 	@FindBy(linkText = "Autocomplete")
-	WebElement autoCompleteButton;
+	private WebElement autoCompleteButton;
 	
 	@FindBy(linkText = "Datepicker")
-	WebElement datePickerButton;
+	private WebElement datePickerButton;
 	
 	@FindBy(linkText = "Menu")
-	WebElement menuButton;
+	private WebElement menuButton;
 	
 	@FindBy(linkText = "Slider")
-	WebElement sliderButton;
+	private WebElement sliderButton;
 	
 	@FindBy(linkText = "Tabs")
-	WebElement tabsButton;
+	private WebElement tabsButton;
 	
 	@FindBy(linkText = "Tooltip")
-	WebElement tooltipButton;
+	private WebElement toolTipButton;
+	
+	public void clickDroppable() {
+		droppableButton.click();
+	}
+	
+	public void clickSelectable() {
+		selectableButton.click();
+	}
+	
+	public void clickAccordion() {
+		accordionButton.click();
+	}
+	
+	public void clickAutoComplete() {
+		autoCompleteButton.click();
+	}
+	
+	public void clickDatePicker() {
+		datePickerButton.click();
+	}	
+	public void clickMenu() {
+		menuButton.click();
+	}	
+	public void clickSlider() {
+		sliderButton.click();
+	}	
+	public void tabs() {
+		tabsButton.click();
+	}	
+	public void toolTip() {
+		toolTipButton.click();
+	}	
+
 }

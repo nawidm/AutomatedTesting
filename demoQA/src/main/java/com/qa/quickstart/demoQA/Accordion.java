@@ -11,5 +11,7 @@ public class Accordion {
 	@FindBy(xpath = "//*[@id=\"ui-id-6\"]")
 	WebElement section2;
 	
-	
+	public void clickSection2() {
+		section2.click();
+	}
 }
