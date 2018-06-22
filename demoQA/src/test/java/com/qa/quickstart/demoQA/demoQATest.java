@@ -147,18 +147,50 @@ public class demoQATest {
 			extent.endTest(test);
 		}
 	}
-
+	@Ignore
 	@Test 
 	public void testDatePicker() {
+		ExtentTest test = extent.startTest("Testing DatePicker");
 		demoQAHome homePage = PageFactory.initElements(driver, demoQAHome.class);
+		
 		DatePicker datePickerPage = PageFactory.initElements(driver, DatePicker.class);
 		
 		homePage.clickDatePicker();
+		test.log(LogStatus.INFO, "Loaded Datepicker page");
 		datePickerPage.clickBox();
+		test.log(LogStatus.INFO, "Click on textbox");
 		datePickerPage.clickNextMonth();
-		datePickerPage.selectDate("18", driver);
+		test.log(LogStatus.INFO, "Next month on calender selected");
+		datePickerPage.selectDate("20", driver);
+		test.log(LogStatus.INFO, "Selected specific date");
+		try {
+			assertTrue(datePickerPage.getDateTxt().matches(datePickerPage.getMonth()+" "+datePickerPage.getDay()+", "+datePickerPage.getYear()));
+			test.log(LogStatus.PASS, "textbox succesfully updated with selected date from calender");
+		} catch(AssertionError e) {
+			test.log(LogStatus.FAIL, "textbox was not properly updated");
+			fail();
+			driver.quit();
+		} finally {
+			test.log(LogStatus.INFO, "Current URL: "+driver.getCurrentUrl());
+			extent.endTest(test);
+		}
 
-		assertTrue(datePickerPage.getDateTxt().matches(datePickerPage.getMonth()+" "+datePickerPage.getDay()+", "+datePickerPage.getYear()));
+	}
+
+	@Test
+	public void testMenu() {
+		demoQAHome homePage = PageFactory.initElements(driver, demoQAHome.class);
+		Menu menuPage = PageFactory.initElements(driver, Menu.class);
+		
+		homePage.clickMenu();
+		menuPage.moveToNewTarget("Home", driver);
+		menuPage.getCurrentHighlighted(driver);
+		menuPage.moveToNewTarget("Contact", driver);
+		assertTrue(!menuPage.getInitialHighlightedColourNow().matches("rgba(255, 153, 0, 1)"));
+
+		assertTrue(menuPage.getNewTargetsColor().matches("rgba(255, 153, 0, 1)"));
+		
+		//assertTrue(menuPage.;)
 	}
 	
 	@After
